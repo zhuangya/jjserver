@@ -17,7 +17,6 @@ def validate_form(param, request):
         mkey = 'massage_%s' % pk
         if gb.has_key(mkey):
             pv = gb[mkey](pv)
-        print pv, param[pk], request.form
         if pv is None:
             if param[pk] is None:
                 return -400, pk
@@ -44,7 +43,7 @@ def massage_cell(cell):
     Arguments:
     - `cell`:
     """
-    cell = cell.replace('-', '')
+    cell = cell and cell.replace('-', '') or ''
     return (len(cell) > 10) and cell[-11:] or None
 
 def massage_password(pwd):
@@ -54,5 +53,4 @@ def massage_password(pwd):
     - `cell`:
     """
     return (len(pwd) > 5) and pwd or None
-
 

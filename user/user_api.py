@@ -30,7 +30,7 @@ def vcode_limit(f):
                  'vcode': None}
         succ, msg = fu.validate_form(param, request)
         if succ < 0:
-            return fu.resp(500, msg)
+            return fu.resp(-500, msg)
         vc = uc.vcode_ctrl(param['cell'])
         succ, msg = vc.verify(param['vcode'])
         if succ < 0:
@@ -81,7 +81,6 @@ def register():
         return fu.resp(-400, '两次密码不一致')
 
     #add new user
-    print param
     _u = uc.user_ctrl(param['cell'])
     succ, msg = _u.register(param['password'])
     return fu.resp(succ, msg)

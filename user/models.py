@@ -97,7 +97,6 @@ class vcode(db.Model):
         - `self`:
         """
         now = int(time.time())
-        print now, self.expire
         return (now - self.expire) > 0
         
     def renew(self):
