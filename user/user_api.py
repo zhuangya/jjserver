@@ -99,6 +99,28 @@ def login():
     #login succ, return real cont
     return fu.resp(code, msg)
     
+@user_api.route('/rstpwd')
+def reset_password():
+    param = {'cell': None,
+             'vcode': None,
+             'password': None,
+             'passrep': None}
+
+    succ, msg = fu.validate_form(param, request)
+
+    if succ < 0:
+        return fu.resp(succ, '%s missing' % msg)
+
+    _u = uc.user_ctrl(param['cell'])
+
+    if not u.exists():
+        return fu.resp(-400, 'user does not exist')
+    if (param['password'] != param['passrep']):
+        return fu.resp(-400, '两次密码不一致')
+
+    code, msg = _u.reset_password(param['password'])
+
+    return fs.resp(code, msg)
 
 
 @user_api.route('/')

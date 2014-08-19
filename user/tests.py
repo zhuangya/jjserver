@@ -64,3 +64,13 @@ class vcodeTest(base_test.baseTest):
         _, rst =self.succ_request('/user/login', reg_data)
         self.assertEqual(rst['err'], -400)
 
+        # test reset password
+        _, rst =self.succ_request('/user/vcode', {'cell': '13412341234'})
+        _, rst =self.succ_request('/user/view_code/%s' % cell)
+        vcode = rst['cnt']['vcode']
+        _, rst =self.succ_request('/user/rstpwd', {'cell': '13412341234',
+                                                   'vcode': vode,
+                                                   'password': '7654321',
+                                                   'passrep': '7654321'})
+        self.assertEqual(rst['err'], 0)
+
