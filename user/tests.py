@@ -38,6 +38,11 @@ class vcodeTest(base_test.baseTest):
         _, rst =self.succ_request('/user/reg', reg_data)
         self.assertEqual(rst['err'], -400)
 
+        reg_data['vcode'] = '12345'
+        _, rst =self.succ_request('/user/reg', reg_data)
+        self.assertEqual(rst['err'], -500)
+
+        reg_data['vcode'] = vcode
         reg_data['passrep'] = pwd
         _, rst =self.succ_request('/user/reg', reg_data)
         self.assertEqual(rst['err'], 0)
