@@ -61,6 +61,9 @@ class User(db.Model):
             self.login_retry = self.login_retry + 1
         return rst
 
+    def reset_password(self, password):
+        self.password = self.gen_pwd(password)
+        return 0
 
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
