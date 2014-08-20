@@ -60,6 +60,21 @@ class user_ctrl():
         db.session.commit()
         return 0, 'ok'
 
+    def reset_password(self, password):
+        """
+
+        Arguments:
+        - `self`:
+        - `password`:
+        """
+        code, msg = -400, 'pwd_err'
+        if not self.exists():
+            return code, msg
+        self._u.reset_password(password)
+        db.session.commit()
+        return 0, ''
+
+
     def login(self, password):
         """
         

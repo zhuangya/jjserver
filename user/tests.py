@@ -69,7 +69,7 @@ class vcodeTest(base_test.baseTest):
         _, rst =self.succ_request('/user/view_code/%s' % cell)
         vcode = rst['cnt']['vcode']
         _, rst =self.succ_request('/user/rstpwd', {'cell': '13412341234',
-                                                   'vcode': vode,
+                                                   'vcode': vcode,
                                                    'password': '7654321',
                                                    'passrep': '7654321'})
         self.assertEqual(rst['err'], 0)
