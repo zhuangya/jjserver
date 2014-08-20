@@ -5,7 +5,8 @@ from utils.database import db
 import settings
 from utils import cell as cu
 
-class user(db.Model):
+
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cell = db.Column(db.String(16), index=True, unique=True)
     passsalt = db.Column(db.String(16))
@@ -17,7 +18,7 @@ class user(db.Model):
 
     def __init__(self, cell):
         """
-        
+
         Arguments:
         - `self`:
         - `cell`:
@@ -26,11 +27,11 @@ class user(db.Model):
         self.create = int(time.time())
         self.last_login = self.create
         self.login_retry = 0
-        self.passsalt = cu.gen_voced()
+        self.passsalt = cu.gen_vcode()
 
     def gen_pwd(self, password):
         """
-        
+
         Arguments:
         - `self`:
         - `password`:
@@ -39,13 +40,13 @@ class user(db.Model):
 
     def reg(self, password):
         """
-        
+
         Arguments:
         - `self`:
         - `password`:
         """
         self.password = self.gen_pwd(password)
-        
+
     def login(self, password):
         now = int(time.time())
         self.last_login = now
@@ -64,7 +65,27 @@ class user(db.Model):
         self.password = self.gen_pwd(password)
         return 0
 
-class vcode(db.Model):
+class Contact(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cell = db.Column(db.String(16), index=True)
+    tgtcell = db.Column(db.String(16))
+    name = db.Column(db.String(32))
+    imei = db.Column(db.String(64))
+    expire = db.Column(db.Integer)
+    create = db.Column(db.Integer, index=True)
+
+    def __init__(self, cell, tgt):
+        """
+
+        Arguments:
+        - `self`:
+        """
+        self.expire = 0
+        self.tgt = tgt
+        self.cell = cell
+
+
+class Vcode(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cell = db.Column(db.String(16), index=True, unique=True)
     vcode = db.Column(db.String(16))
@@ -74,14 +95,14 @@ class vcode(db.Model):
 
     def __init__(self, cell):
         """`
-        
+
         Arguments:
         - `self`:
         - `cell`:
         - `vcode`:
         """
         self.cell = cell
-        self.vcode = cu.gen_voced()
+        self.vcode = cu.gen_vcode()
         self.create = int(time.time())
         self.expire = self.create + settings.VCODE_EXPIRE
         self.sent = 0
@@ -92,29 +113,29 @@ class vcode(db.Model):
                 'vcode': self.vcode,
                 'create': self.create,
                 'expire': self.expire}
-        
+
     def expired(self):
         """
-        
+
         Arguments:
         - `self`:
         """
         now = int(time.time())
         return (now - self.expire) > 0
-        
+
     def renew(self):
         """
-        
+
         Arguments:
         - `self`:
         """
-        self.vcode = cu.gen_voced()
+        self.vcode = cu.gen_vcode()
         self.create = int(time.time())
         self.expire = self.create + settings.VCODE_EXPIRE
-        
+
     def verify(self, vcode):
         """
-        
+
         Arguments:
         - `self`:
         - `vco`:
@@ -124,4 +145,3 @@ class vcode(db.Model):
         if self.vcode != vcode:
             return -2
         return 0
-
