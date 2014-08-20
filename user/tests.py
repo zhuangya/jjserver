@@ -20,7 +20,7 @@ class VcodeTest(base_test.BaseTest):
 
         self.assertEqual(rst['err'], -500)
 
-        # gen voced
+        # gen vcode
         _, rst = self.succ_request('/user/vcode', reg_data)
         _, rst = self.succ_request('/user/view_code/%s' % cell)
         vcode = rst['cnt']['vcode']

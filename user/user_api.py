@@ -7,6 +7,7 @@ from functools import wraps
 from flask import Blueprint, request, session
 
 from user import controllers as uc
+from user import models as um
 from utils import form as fu
 
 
@@ -28,7 +29,7 @@ def vcode_limit(f):
                  'vcode': None}
         succ, msg = fu.validate_form(param, request)
         if succ < 0:
-            return fu.resp(-500, msg)
+            return fu.resp(-500, 'invalid ' + msg)
         vc = uc.VcodeCtrl(param['cell'])
         succ, msg = vc.verify(param['vcode'])
         if succ < 0:
@@ -56,11 +57,18 @@ def tgtcell_operatable(f):
         succ, msg = fu.validate_form(param, request)
         if succ < 0:
             return fu.resp(-500, msg)
-        # check user ``tgtcell`` exists
-        return fu.resp(-404, '好友未找到')
 
-        # check ``(cell, tgtcell)`` in contact table
-        return fu.resp(-403, '未添加通讯录')
+        if cell == param['tgtcell']:
+            return fu.resp(-500, '无法查找自己')
+
+        # if it's a user
+        if not um.User.query.filter_by(cell=param['tgtcell']).first():
+            return fu.resp(-404, '好友未找到')
+
+        # if it's a contact
+        if not um.Contact.query.filter_by(cell=cell,
+                                          tgtcell=param['tgtcell']).first():
+            return fu.resp(-403, '未添加通讯录')
 
         return f(*args, **kwargs)
 

@@ -12,7 +12,7 @@ def validate_form(param, request):
     - `request`:
     """
     gb = globals()
-    for pk in param.keys():
+    for pk in param:
         pv = request.form.get(pk, None)
 
         mkey = 'massage_%s' % pk
