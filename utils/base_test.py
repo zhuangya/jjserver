@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import runserver
-import settings
 
 from flask.ext.testing import TestCase
-from user.user_api import user_api
 from utils.database import db
 
-class baseTest(TestCase):
+
+class BaseTest(TestCase):
     def create_app(self):
         """
-        
+
         Arguments:
         - `self`:
         """
@@ -20,7 +19,7 @@ class baseTest(TestCase):
 
     def setUp(self):
         """
-        
+
         Arguments:
         - `self`:
         """
@@ -28,7 +27,7 @@ class baseTest(TestCase):
 
     def tearDown(self):
         """
-        
+
         Arguments:
         - `self`:
         """
@@ -37,7 +36,7 @@ class baseTest(TestCase):
 
     def succ_request(self, uri, data=None):
         """
-        
+
         Arguments:
         - `uri`:
         - `data`:
@@ -48,4 +47,3 @@ class baseTest(TestCase):
             resp = self.client.get(uri)
         self.assertEqual(resp.status_code, 200)
         return resp, resp.json
-
