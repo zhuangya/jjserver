@@ -4,7 +4,7 @@
 import string
 import random
 
-def gen_voced():
+def gen_vcode():
     """
     """
     return ''.join(random.choice(string.digits) for x in range(6))

@@ -38,6 +38,41 @@ def vcode_limit(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def tgtcell_operatable(f):
+    """检查参数中的``tgtcell`` 在 参数中 ``cell`` 的联系人列表中，且二者都是合法用户。
+    如果不满足条件，返回 -403 错误
+    
+    Arguments:
+    - `f`:
+    """
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        err = ''
+        param = {'cell': None,
+                 'tgtcell': None}
+        succ, msg = fu.validate_form(param, request)
+        if succ < 0:
+            return fu.resp(-500, msg)
+
+        # check user ``tgtcell`` exists
+        return fu.resp(-404, '好友未找到')
+
+        # check ``(cell, tgtcell)`` in contact table
+        return fu.resp(-403, '未添加通讯录')
+
+        return f(*args, **kwargs)
+    return decorated_function
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        cell = session.get('cell', None)
+        if not cell:
+            return fu.resp(-401, '请先登录')
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 @user_api.route('/view_code/<cell>', methods=['GET'])
 def view_code(cell):
     """

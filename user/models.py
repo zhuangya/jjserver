@@ -26,7 +26,7 @@ class user(db.Model):
         self.create = int(time.time())
         self.last_login = self.create
         self.login_retry = 0
-        self.passsalt = cu.gen_voced()
+        self.passsalt = cu.gen_vcode()
 
     def gen_pwd(self, password):
         """
@@ -60,6 +60,25 @@ class user(db.Model):
             self.login_retry = self.login_retry + 1
         return rst
 
+class contact(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cell = db.Column(db.String(16), index=True)
+    tgtcell = db.Column(db.String(16))
+    name = db.Column(db.String(32))
+    imei = db.Column(db.String(64))
+    expire = db.Column(db.Integer)
+    create = db.Column(db.Integer, index=True)
+
+    def __init__(self, cell, tgt):
+        """
+        
+        Arguments:
+        - `self`:
+        """
+        self.expire = 0
+        self.tgt = tgt
+        self.cell = cell
+
 
 class vcode(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -78,7 +97,7 @@ class vcode(db.Model):
         - `vcode`:
         """
         self.cell = cell
-        self.vcode = cu.gen_voced()
+        self.vcode = cu.gen_vcode()
         self.create = int(time.time())
         self.expire = self.create + settings.VCODE_EXPIRE
         self.sent = 0
@@ -105,7 +124,7 @@ class vcode(db.Model):
         Arguments:
         - `self`:
         """
-        self.vcode = cu.gen_voced()
+        self.vcode = cu.gen_vcode()
         self.create = int(time.time())
         self.expire = self.create + settings.VCODE_EXPIRE
         
