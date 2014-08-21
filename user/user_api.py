@@ -118,8 +118,7 @@ def register():
     """
     """
     param = {'cell': None,
-             'password': None,
-             'passrep': None}
+             'password': None}
     succ, msg = fu.validate_form(param, request)
     if succ < 0:
         return fu.resp(succ, '%s missing' % msg)
@@ -127,8 +126,6 @@ def register():
     u = uc.UserCtrl(param['cell'])
     if u.exists():
         return fu.resp(-400, 'user_exists')
-    if (param['password'] != param['passrep']):
-        return fu.resp(-400, '两次密码不一致')
 
     # add new user
     _u = uc.UserCtrl(param['cell'])
@@ -155,8 +152,7 @@ def login():
 def reset_password():
     param = {'cell': None,
              'vcode': None,
-             'password': None,
-             'passrep': None}
+             'password': None}
 
     succ, msg = fu.validate_form(param, request)
 
@@ -167,8 +163,6 @@ def reset_password():
 
     if not _u.exists():
         return fu.resp(-400, 'user does not exist')
-    if (param['password'] != param['passrep']):
-        return fu.resp(-400, '两次密码不一致')
 
     code, msg = _u.reset_password(param['password'])
 

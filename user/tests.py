@@ -13,7 +13,6 @@ class VcodeTest(base_test.BaseTest):
         pwd = '1234567'
         reg_data = {'cell': cell,
                     'password': pwd,
-                    'passrep': pwd,
                     'vcode': ''}
         # reg without vcode
         _, rst = self.succ_request('/user/reg', reg_data)
@@ -31,10 +30,6 @@ class VcodeTest(base_test.BaseTest):
 
         reg_data['vcode'] = vcode
 
-        del reg_data['passrep']
-        _, rst = self.succ_request('/user/reg', reg_data)
-        self.assertEqual(rst['err'], -400)
-        reg_data['passrep'] = '123'
         _, rst = self.succ_request('/user/reg', reg_data)
         self.assertEqual(rst['err'], -400)
 
@@ -43,7 +38,6 @@ class VcodeTest(base_test.BaseTest):
         self.assertEqual(rst['err'], -500)
 
         reg_data['vcode'] = vcode
-        reg_data['passrep'] = pwd
         _, rst = self.succ_request('/user/reg', reg_data)
         self.assertEqual(rst['err'], 0)
 
@@ -70,7 +64,6 @@ class VcodeTest(base_test.BaseTest):
         vcode = rst['cnt']['vcode']
         _, rst =self.succ_request('/user/rstpwd', {'cell': '13412341234',
                                                    'vcode': vcode,
-                                                   'password': '7654321',
-                                                   'passrep': '7654321'})
+                                                   'password': '7654321'}
         self.assertEqual(rst['err'], 0)
 
