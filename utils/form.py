@@ -54,4 +54,4 @@ def massage_password(pwd):
     Arguments:
     - `cell`:
     """
-    return (len(pwd) > 5) and pwd or None
+    return (pwd and (len(pwd) > 5)) and pwd or None
